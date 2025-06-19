@@ -3,6 +3,7 @@ package com.tolkacheva.food_service.controllers;
 import com.tolkacheva.food_service.entities.Dish;
 import com.tolkacheva.food_service.services.DishService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,12 +12,14 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/dishes")
+@CrossOrigin(origins = "http://localhost:3000")
 public class DishController {
     private final DishService dishService;
 
     @GetMapping("/")
-    public List<Dish> getAllDishes(@RequestParam(name = "name", required = false) String name) {
-        return dishService.allDishes(name);
+    public ResponseEntity<List<Dish>> getAllDishes(@RequestParam(name = "name", required = false) String name) {
+        List<Dish> dishes = dishService.allDishes(name);
+        return ResponseEntity.ok().body(dishes);
     }
 
     @PostMapping("/admin")
