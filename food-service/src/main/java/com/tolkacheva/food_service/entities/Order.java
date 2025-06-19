@@ -28,6 +28,9 @@ public class Order {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    private User user;
+
     @PrePersist
     private void init() {
         createdDate = LocalDateTime.now();

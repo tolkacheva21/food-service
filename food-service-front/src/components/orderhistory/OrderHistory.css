@@ -1,0 +1,83 @@
+.order-history {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.orders-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.order-card {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.status {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.status.new {
+  background-color: #ffeb3b;
+}
+
+.status.processing {
+  background-color: #2196F3;
+  color: white;
+}
+
+.status.delivered {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.status.cancelled {
+  background-color: #f44336;
+  color: white;
+}
+
+.order-items {
+  margin-top: 15px;
+}
+
+.order-items ul {
+  padding-left: 20px;
+}
+
+.total {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.order-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-delete {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+}

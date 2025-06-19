@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../AuthContext';
 import axios from 'axios';
 import DishForm from '../dishform/DishForm';
 import './DishList.css'
 
 const BASE_URL = 'http://localhost:8080/api';
 
-export default function DishList({ isAdmin = false }) {
+export default function DishList({ isAdmin = false, cartItems, setCartItems  }) {
   const [dishes, setDishes] = useState([]);
   const [filter, setFilter] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [currentDish, setCurrentDish] = useState(null);
-  const { user } = useAuth();
+  const token = localStorage.getItem('jwtToken');
 
   useEffect(() => {
     fetchDishes();
@@ -45,7 +44,12 @@ export default function DishList({ isAdmin = false }) {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${BASE_URL}/dishes/admin/${id}`);
+      await axios.delete(`${BASE_URL}/dishes/admin/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
       fetchDishes();
     } catch (error) {
       console.error('Error deleting dish:', error);
@@ -55,15 +59,39 @@ export default function DishList({ isAdmin = false }) {
   const handleSubmit = async (values) => {
     try {
       if (currentDish) {
-        await axios.put(`${BASE_URL}/dishes/admin/${currentDish.id}`, values);
+        await axios.put(`${BASE_URL}/dishes/admin/${currentDish.id}`, values, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        });
       } else {
-        await axios.post(`${BASE_URL}/dishes/admin`, values);
+        await axios.post(`${BASE_URL}/dishes/admin`, values, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        });
       }
       setShowModal(false);
       fetchDishes();
     } catch (error) {
       console.error('Error saving dish:', error);
     }
+  };
+
+  const addToCart = (dish) => {
+    setCartItems(prevItems => {
+      const existingItem = prevItems.find(item => item.id === dish.id);
+      if (existingItem) {
+        return prevItems.map(item =>
+          item.id === dish.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+      return [...prevItems, { ...dish, quantity: 1 }];
+    });
   };
 
   return (
@@ -80,7 +108,7 @@ export default function DishList({ isAdmin = false }) {
     <input
       type="text"
       placeholder="Поиск по имени..."
-      className="form-control"
+      className="form-control-dishes"
       value={filter}
       onChange={(e) => setFilter(e.target.value)}
     />
@@ -100,6 +128,12 @@ export default function DishList({ isAdmin = false }) {
               <span className="dish-price">{dish.price}₽</span>
               <span className="dish-weight">{dish.weight}г</span>
             </div>
+            <button
+              className='btn-add'
+              onClick={() => addToCart(dish)}
+              >
+                Добавить в корзину
+            </button>
             {isAdmin && (
               <div className="dish-actions">
                 <button 

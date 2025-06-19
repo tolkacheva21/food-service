@@ -2,6 +2,7 @@ package com.tolkacheva.food_service.services;
 
 import com.tolkacheva.food_service.entities.Dish;
 import com.tolkacheva.food_service.entities.Order;
+import com.tolkacheva.food_service.entities.User;
 import com.tolkacheva.food_service.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,7 @@ import java.util.List;
 public class OrderService {
     private final OrderRepository orderRepository;
 
-    public Order saveOrder(Dish... dishes) {
+    public Order saveOrder(User user, Dish... dishes) {
         Order newOrder = new Order();
         int totalPrice = 0;
         for (Dish d: dishes) {
@@ -23,6 +24,7 @@ public class OrderService {
             totalPrice += d.getPrice();
         }
         newOrder.setTotalPrice(totalPrice);
+        newOrder.setUser(user);
         newOrder.setStatus("Заказ готовится");
         orderRepository.save(newOrder);
         log.info("Saving new Order {}", newOrder);

@@ -23,20 +23,23 @@ public class DishController {
     }
 
     @PostMapping("/admin")
-    //@PreAuthorize()
-    public Dish createDish(@RequestBody Dish dish) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Dish> createDish(@RequestBody Dish dish) {
         dishService.saveDish(dish);
-        return dish;
+        return ResponseEntity.ok().body(dish);
     }
 
     @PutMapping("/admin/{id}")
-    public Dish changeDish(@PathVariable int id, @RequestBody Dish dish) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Dish> changeDish(@PathVariable int id, @RequestBody Dish dish) {
         dishService.changeDish(id, dish);
-        return dish;
+        return ResponseEntity.ok().body(dish);
     }
 
     @DeleteMapping("/admin/{id}")
-    public void deleteDish(@PathVariable int id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteDish(@PathVariable int id) {
         dishService.deleteDish(id);
+        return ResponseEntity.ok("Dish deleted successful");
     }
 }

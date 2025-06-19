@@ -16,8 +16,13 @@ export default function Navbar() {
         <h1 className="navbar-brand">Food Service</h1>
         <div className="navbar-links">
           <Link to="/" className="nav-link">Меню</Link>
+          <Link to="/cart" className="nav-link">Корзина</Link>
+          <Link to="/orders" className="nav-link">Мои заказы</Link>
           {user?.role === 'ROLE_ADMIN' && (
-            <Link to="/admin" className="nav-link">Admin</Link>
+            <>
+              <Link to="/admin" className="nav-link">Admin</Link>
+              <Link to="/admin/orders" className="nav-link">Все заказы</Link>
+            </>
           )}
         </div>
         <div>

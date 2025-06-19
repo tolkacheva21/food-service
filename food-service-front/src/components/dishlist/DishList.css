@@ -8,7 +8,7 @@
 
 .dish-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, minmax(280px, 1fr));
   gap: 2rem;
   padding: 1rem;
 }
@@ -75,6 +75,20 @@
   margin-top: 1rem;
 }
 
+.btn-add {
+  background-color: #200077;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-add:hover {
+  background-color: #1a015e;
+}
+
 .btn-edit {
   background-color: #ffc107;
   color: #212529;
@@ -108,8 +122,8 @@
   padding: 0 1rem;
 }
 
-.form-control {
-  width: 70%;
+.form-control-dishes {
+  width: 60%;
   padding: 0.75rem;
   margin-bottom: 2rem;
   border: 1px solid #ddd;

@@ -36,8 +36,8 @@ public class User implements UserDetails {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private List<Order> orders = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
 
     @PrePersist
     private void init() {
