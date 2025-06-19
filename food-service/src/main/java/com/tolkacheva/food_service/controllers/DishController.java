@@ -16,7 +16,7 @@ import java.util.List;
 public class DishController {
     private final DishService dishService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<Dish>> getAllDishes(@RequestParam(name = "name", required = false) String name) {
         List<Dish> dishes = dishService.allDishes(name);
         return ResponseEntity.ok().body(dishes);

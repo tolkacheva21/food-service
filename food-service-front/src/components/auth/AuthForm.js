@@ -7,7 +7,7 @@ const BASE_URL = 'http://localhost:8080/api/auth';
 
 export default function AuthForm() {
   const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLogin, setIsLogin] = useState(true);
@@ -21,13 +21,20 @@ export default function AuthForm() {
       const url = isLogin ? `${BASE_URL}/login` : `${BASE_URL}/register`;
       const data = isLogin 
         ? { email, password }
-        : { email, password, username };
+        : { email, password, name };
       const response = await axios.post(url, data);
       
       if (isLogin) {
-        // При успешном входе сохраняем токен (если бэкенд его возвращает)
-        // и перенаправляем на главную
+        // Сохраняем токен в localStorage
+        const token = response.data.token;
+        localStorage.setItem('jwtToken', token);
+        
+        // Добавляем токен в заголовки axios по умолчанию
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        // перенаправляем на главную
         navigate('/');
+        window.location.reload();
       } else {
         // После регистрации переключаем на форму входа
         setIsLogin(true);
@@ -38,6 +45,17 @@ export default function AuthForm() {
                (isLogin ? 'Ошибка входа' : 'Ошибка регистрации'));
     }
   };
+
+  // Добавляем интерцептор для автоматической подстановки токена
+  axios.interceptors.request.use(config => {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  }, error => {
+    return Promise.reject(error);
+  });
 
   return (
     <div className="auth-container">
@@ -51,8 +69,8 @@ export default function AuthForm() {
             <input
               type="text"
               className="form-control"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
               minLength="3"
             />
@@ -78,12 +96,12 @@ export default function AuthForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            minLength="6"
+            minLength="3"
           />
         </div>
 
         <button type="submit" className="btn btn-primary">
-          {isLogin ? 'Войти' : 'Зарегестрироваться'}
+          {isLogin ? 'Войти' : 'Зарегистрироваться'}
         </button>
       </form>
 

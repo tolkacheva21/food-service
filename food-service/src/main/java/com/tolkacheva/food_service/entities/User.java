@@ -3,6 +3,7 @@ package com.tolkacheva.food_service.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
@@ -46,7 +47,7 @@ public class User implements UserDetails {
     // security
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(() -> role);
+        return Collections.singletonList(new SimpleGrantedAuthority(this.role));
     }
 
     @Override

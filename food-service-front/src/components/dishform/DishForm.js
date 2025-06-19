@@ -5,6 +5,7 @@ export default function DishForm({ initialValues, onSubmit, onCancel }) {
     name: '',
     description: '',
     price: 0,
+    weight: 0,
   });
   const [errors, setErrors] = useState({});
 
@@ -18,6 +19,7 @@ export default function DishForm({ initialValues, onSubmit, onCancel }) {
     if (!values.name) newErrors.name = 'Name is required';
     if (!values.description) newErrors.description = 'Description is required';
     if (!values.price || values.price <= 0) newErrors.price = 'Price must be positive';
+    if (!values.weight || values.weight <= 0) newErrors.price = 'Weight must be positive';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -32,7 +34,7 @@ export default function DishForm({ initialValues, onSubmit, onCancel }) {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label>Name</label>
+        <label>Название</label>
         <input
           type="text"
           name="name"
@@ -44,7 +46,7 @@ export default function DishForm({ initialValues, onSubmit, onCancel }) {
       </div>
 
       <div>
-        <label>Description</label>
+        <label>Описание</label>
         <textarea
           name="description"
           className="form-control"
@@ -55,7 +57,7 @@ export default function DishForm({ initialValues, onSubmit, onCancel }) {
       </div>
 
       <div>
-        <label>Price</label>
+        <label>Цена</label>
         <input
           type="number"
           name="price"
@@ -66,11 +68,23 @@ export default function DishForm({ initialValues, onSubmit, onCancel }) {
         {errors.price && <div className="text-danger">{errors.price}</div>}
       </div>
 
+      <div>
+        <label>Вес</label>
+        <input
+          type="number"
+          name="weight"
+          className="form-control"
+          value={values.weight}
+          onChange={handleChange}
+        />
+        {errors.weight && <div className="text-danger">{errors.weight}</div>}
+      </div>
+
       <button type="submit" className="btn btn-primary">
-        {initialValues ? 'Update' : 'Create'}
+        {initialValues ? 'Изменить' : 'Создать'}
       </button>
       <button type="button" className="btn" onClick={onCancel}>
-        Cancel
+        Отмена
       </button>
     </form>
   );

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
 import axios from 'axios';
-import DishForm from '../DishForm';
+import DishForm from '../dishform/DishForm';
 import './DishList.css'
 
 const BASE_URL = 'http://localhost:8080/api';
@@ -20,7 +20,7 @@ export default function DishList({ isAdmin = false }) {
   const fetchDishes = async () => {
     try {
       const params = filter ? { name: filter } : {};
-      const response = await axios.get(`${BASE_URL}/dishes/`, { 
+      const response = await axios.get(`${BASE_URL}/dishes`, { 
         params,
         headers: {
           'Accept': 'application/json', // Явно запрашиваем JSON
@@ -69,17 +69,17 @@ export default function DishList({ isAdmin = false }) {
   return (
     <div className="dish-list-container">
     <div className="header">
-      <h1>{isAdmin ? 'Admin: Dishes Management' : 'Menu'}</h1>
+      <h1>{isAdmin ? 'Admin: редактирование блюд' : 'Меню'}</h1>
       {isAdmin && (
         <button className="btn btn-primary" onClick={handleCreate}>
-          Add New Dish
+          Создать блюдо
         </button>
       )}
     </div>
 
     <input
       type="text"
-      placeholder="Filter by name..."
+      placeholder="Поиск по имени..."
       className="form-control"
       value={filter}
       onChange={(e) => setFilter(e.target.value)}
@@ -106,13 +106,13 @@ export default function DishList({ isAdmin = false }) {
                   className="btn-edit" 
                   onClick={() => handleEdit(dish)}
                 >
-                  Edit
+                  Изменить
                 </button>
                 <button 
                   className="btn-delete" 
                   onClick={() => handleDelete(dish.id)}
                 >
-                  Delete
+                  Удалить
                 </button>
               </div>
             )}
@@ -124,7 +124,7 @@ export default function DishList({ isAdmin = false }) {
     {showModal && (
       <div className="modal">
         <div className="modal-content">
-          <h2>{currentDish ? 'Edit Dish' : 'Create Dish'}</h2>
+          <h2>{currentDish ? 'Редактировать блюдо' : 'Создать блюдо'}</h2>
           <DishForm
             initialValues={currentDish}
             onSubmit={handleSubmit}

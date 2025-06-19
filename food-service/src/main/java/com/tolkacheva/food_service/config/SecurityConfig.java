@@ -51,7 +51,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/dishes/").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/dishes").permitAll()
                         .requestMatchers("/api/dishes/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/history/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
