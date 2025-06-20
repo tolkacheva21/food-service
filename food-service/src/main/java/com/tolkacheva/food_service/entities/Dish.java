@@ -1,5 +1,6 @@
 package com.tolkacheva.food_service.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,7 +30,7 @@ public class Dish {
     private int price;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JsonIgnore
+    @JsonBackReference  //"ведомая" сторона отношения
     private Order order;
 
     @Transient // поле не будет сохраняться в БД

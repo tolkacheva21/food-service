@@ -2,7 +2,6 @@ package com.tolkacheva.food_service.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +19,10 @@ public class Order {
     @Column(name = "id")
     private int id;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "order")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
+            fetch = FetchType.EAGER,
+            mappedBy = "order")
+    @JsonManagedReference   //"ведущая" сторона отношения
     private List<Dish> dishes = new ArrayList<>();
 
     @Column(name = "total_price")

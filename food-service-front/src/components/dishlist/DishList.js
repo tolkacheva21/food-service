@@ -22,7 +22,7 @@ export default function DishList({ isAdmin = false, cartItems, setCartItems  }) 
       const response = await axios.get(`${BASE_URL}/dishes`, { 
         params,
         headers: {
-          'Accept': 'application/json', // Явно запрашиваем JSON
+          'Accept': 'application/json',
           'Content-Type': 'application/json'
         } 
       });

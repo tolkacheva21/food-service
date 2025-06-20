@@ -16,11 +16,20 @@ export default function OrderHistory({ isAdmin = false }) {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}${isAdmin ? '/admin' : ''}`, {
+      let url = `${BASE_URL}`;
+      let config = {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      });
+      };
+
+      if (isAdmin) {
+        url = `${BASE_URL}/admin`;
+        config.params = { all: true };
+      }
+
+      const response = await axios.get(url, config);
       setOrders(response.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Ошибка загрузки заказов');
@@ -32,8 +41,8 @@ export default function OrderHistory({ isAdmin = false }) {
   const changeStatus = async (orderId, newStatus) => {
     try {
       await axios.put(
-        `${BASE_URL}/history/admin/${orderId}`,
-        { status: newStatus },
+        `${BASE_URL}/admin/${orderId}`,
+         newStatus ,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -49,9 +58,10 @@ export default function OrderHistory({ isAdmin = false }) {
 
   const deleteOrder = async (orderId) => {
     try {
-      await axios.delete(`${BASE_URL}/history/admin/${orderId}`, {
+      await axios.delete(`${BASE_URL}/admin/${orderId}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
       fetchOrders();
@@ -72,7 +82,7 @@ export default function OrderHistory({ isAdmin = false }) {
       ) : (
         <div className="orders-list">
           {orders.map(order => (
-            <div key={order.id} className="order-card">
+            <div key={`order-${order.id}`} className="order-card">
               <div className="order-header">
                 <span>Заказ #{order.id}</span>
                 <span className={`status ${order.status.toLowerCase()}`}>
@@ -81,21 +91,21 @@ export default function OrderHistory({ isAdmin = false }) {
               </div>
               
               <div className="order-details">
-                <p>Дата: {new Date(order.createdAt).toLocaleString()}</p>
-                <p>Пользователь: {order.user?.username || 'Гость'}</p>
+                <p>Дата: {new Date(order.createdDate).toLocaleString()}</p>
+                <p>Пользователь: {order.user?.name || 'Гость'}</p>
               </div>
               
               <div className="order-items">
-                <h4>Блюда:</h4>
+                <h4>Состав заказа:</h4>
                 <ul>
-                  {order.dishes.map(dish => (
-                    <li key={dish.id}>
+                  {order.dishes.map((dish, index) => (
+                    <li key={`dish-${order.id}-${dish.id || index}`}>
                       {dish.name} - {dish.price}₽ x{dish.quantity || 1}
                     </li>
                   ))}
                 </ul>
                 <p className="total">
-                  Итого: {order.dishes.reduce((sum, dish) => sum + (dish.price * (dish.quantity || 1)), 0)}₽
+                  Итого: {order.totalPrice}р
                 </p>
               </div>
               
@@ -105,10 +115,10 @@ export default function OrderHistory({ isAdmin = false }) {
                     value={order.status}
                     onChange={(e) => changeStatus(order.id, e.target.value)}
                   >
-                    <option value="NEW">Новый</option>
-                    <option value="PROCESSING">В обработке</option>
-                    <option value="DELIVERED">Доставлен</option>
-                    <option value="CANCELLED">Отменен</option>
+                    <option value="Статус">Статус</option>
+                    <option value="В обработке">В обработке</option>
+                    <option value="Доставлен">Доставлен</option>
+                    <option value="Отменен">Отменен</option>
                   </select>
                   
                   <button
