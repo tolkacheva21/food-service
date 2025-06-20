@@ -1,13 +1,13 @@
 package com.tolkacheva.food_service.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "dishes")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Dish {
@@ -29,5 +29,15 @@ public class Dish {
     private int price;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JsonIgnore
     private Order order;
+
+    @Transient // поле не будет сохраняться в БД
+    private Integer quantity;
+
+    @PrePersist
+    @PreUpdate
+    private void prepareForSave() {
+        this.quantity = null;
+    }
 }

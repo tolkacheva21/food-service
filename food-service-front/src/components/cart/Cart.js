@@ -19,6 +19,11 @@ export default function Cart({ cartItems, onRemoveItem, onUpdateQuantity }) {
   }, [token]);
 
   const createOrder = async () => {
+    if (!token) {
+      setError('Требуется авторизация');
+      return;
+    }
+
     if (cartItems.length === 0) {
       setError('Корзина пуста');
       return;
@@ -26,18 +31,17 @@ export default function Cart({ cartItems, onRemoveItem, onUpdateQuantity }) {
 
     setLoading(true);
     try {
-      const orderData = {
-        dishes: cartItems.map(item => ({
-          id: item.id,
+      await axios.post(`${BASE_URL}`, 
+        cartItems.map(item => ({ // Отправляем массив напрямую
+          dishId: item.id,
           quantity: item.quantity
-        }))
-      };
-
-      await axios.post(`${BASE_URL}`, orderData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+        })), 
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
       });
 
       // Очищаем корзину после успешного заказа

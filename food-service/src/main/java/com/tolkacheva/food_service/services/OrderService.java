@@ -16,12 +16,18 @@ import java.util.List;
 public class OrderService {
     private final OrderRepository orderRepository;
 
-    public Order saveOrder(User user, Dish... dishes) {
+    public Order saveOrder(User user, List<Dish> dishes) {
         Order newOrder = new Order();
         int totalPrice = 0;
         for (Dish d: dishes) {
+            Dish dish = new Dish();
+            dish.setId(d.getId()); // Используем существующий ID
+            dish.setName(d.getName());
+            dish.setPrice(d.getPrice());
+            dish.setQuantity(d.getQuantity());
+
             newOrder.addDishToOrder(d);
-            totalPrice += d.getPrice();
+            totalPrice += dish.getPrice() * dish.getQuantity();
         }
         newOrder.setTotalPrice(totalPrice);
         newOrder.setUser(user);
