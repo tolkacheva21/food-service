@@ -38,7 +38,7 @@ export default function AuthForm() {
       } else {
         // После регистрации переключаем на форму входа
         setIsLogin(true);
-        setError('Регистрация прошла успешно. Пожалуйста, войдите.');
+        alert('Регистрация прошла успешно. Пожалуйста, войдите.');
       }
     } catch (err) {
       setError(err.response?.data?.message || 
